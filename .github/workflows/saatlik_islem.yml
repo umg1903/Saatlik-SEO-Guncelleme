@@ -1,0 +1,37 @@
+name: Saatlik SEO Guncelleme
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Bu ifade "her saatin başında çalış" demektir.
+  workflow_dispatch:      # Manuel başlatma butonu ekler (test için önemli).
+
+jobs:
+  run_script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Depoyu Kontrol Et
+        uses: actions/checkout@v4
+
+      - name: Python'ı Kur
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Gereksinimleri Yukle
+        run: |
+          pip install -r requirements.txt
+          # Eğer requirements.txt yoksa kütüphaneleri manuel yaz:
+          # pip install requests pandas beautifulsoup4
+
+      - name: Python Betigini Calistir
+        run: python seo_saldiri.py
+
+      - name: Degisiklikleri Netlify'a Gonder
+        uses: nwtgck/actions-netlify@v2.0
+        with:
+          publish-dir: './' # Burası çok önemli: Sitenin ana dosyaları neredeyse orayı yaz (örn: ./public)
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
