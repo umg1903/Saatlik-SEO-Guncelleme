@@ -2,34 +2,36 @@ name: Saatlik SEO Guncelleme
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Bu ifade "her saatin başında çalış" demektir.
-  workflow_dispatch:      # Manuel başlatma butonu ekler (test için önemli).
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+env:
+  # GitHub'ın önerdiği Node.js 24 zorlamasını aktif ediyoruz
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   run_script:
     runs-on: ubuntu-latest
     steps:
       - name: Depoyu Kontrol Et
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # v4 şu an en güncel stabil sürümdür
 
       - name: Python'ı Kur
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5 # v4 yerine v5 kullanarak daha yeni Node desteği alıyoruz
         with:
-          python-version: '3.9'
+          python-version: '3.11' # Daha güncel bir Python sürümü
 
       - name: Gereksinimleri Yukle
         run: |
           pip install -r requirements.txt
-          # Eğer requirements.txt yoksa kütüphaneleri manuel yaz:
-          # pip install requests pandas beautifulsoup4
 
       - name: Python Betigini Calistir
         run: python seo_saldiri.py
 
       - name: Degisiklikleri Netlify'a Gonder
-        uses: nwtgck/actions-netlify@v2.0
+        uses: nwtgck/actions-netlify@v3.0 # v2.0 yerine v3.0 kullanıyoruz
         with:
-          publish-dir: './' # Burası çok önemli: Sitenin ana dosyaları neredeyse orayı yaz (örn: ./public)
+          publish-dir: './' 
           production-deploy: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
         env:
