@@ -5,8 +5,8 @@ on:
     - cron: '0 * * * *'
   workflow_dispatch:
 
+# Bu kısım uyarıyı susturur ve sistemi Node.js 24'e zorlar
 env:
-  # GitHub'ın önerdiği Node.js 24 zorlamasını aktif ediyoruz
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Depoyu Kontrol Et
-        uses: actions/checkout@v4 # v4 şu an en güncel stabil sürümdür
+        uses: actions/checkout@v4 # v4 en güncel sürümdür
 
       - name: Python'ı Kur
-        uses: actions/setup-python@v5 # v4 yerine v5 kullanarak daha yeni Node desteği alıyoruz
+        uses: actions/setup-python@v5 # v4'ten v5'e yükselttik (Node 24 uyumu için)
         with:
-          python-version: '3.11' # Daha güncel bir Python sürümü
+          python-version: '3.11'
 
       - name: Gereksinimleri Yukle
         run: |
@@ -28,12 +28,11 @@ jobs:
       - name: Python Betigini Calistir
         run: python seo_saldiri.py
 
-      - name: Degisiklikleri Netlify'a Gonder
-        uses: nwtgck/actions-netlify@v3.0 # v2.0 yerine v3.0 kullanıyoruz
+      - name: Netlify'a Yükle
+        uses: nwtgck/actions-netlify@v3.0 # v2'den v3'e güncelledik
         with:
           publish-dir: './' 
           production-deploy: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_SITE_ID: ${{ https://ferzan-ozpetek-archive.netlify.app }}
