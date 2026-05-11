@@ -20,9 +20,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Kutuphaneleri Yukle
+      - name: Kütüphaneleri Doğrudan Yükle
         run: |
-          pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 lxml pandas
+          # Eğer başka özel bir kütüphane (örn: selenium) kullanıyorsan buraya ekle
 
       - name: Python Betigini Calistir
         run: python seo_saldiri.py
@@ -32,8 +34,6 @@ jobs:
         with:
           publish-dir: './' 
           production-deploy: true
-          # URL'yi buraya veya baska bir yere eklemek istersen tırnak kullanmalısın:
-          # note: "https://ferzan-ozpetek-archive.netlify.app"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
