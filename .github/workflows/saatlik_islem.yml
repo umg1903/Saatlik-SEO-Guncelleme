@@ -5,7 +5,7 @@ on:
     - cron: '0 * * * *'
   workflow_dispatch:
 
-# Bu kısım uyarıyı susturur ve sistemi Node.js 24'e zorlar
+# 1. ADIM: Node.js 24 uyarısını susturmak için bu ortam değişkenini ekledik
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -13,11 +13,13 @@ jobs:
   run_script:
     runs-on: ubuntu-latest
     steps:
+      # 2. ADIM: v4.x sürümünün en güncel alt yapısını kullandığından emin oluyoruz
       - name: Depoyu Kontrol Et
-        uses: actions/checkout@v4 # v4 en güncel sürümdür
+        uses: actions/checkout@v4 
 
+      # 3. ADIM: v4 yerine v5 kullanarak Node 20 bağımlılığından kurtuluyoruz
       - name: Python'ı Kur
-        uses: actions/setup-python@v5 # v4'ten v5'e yükselttik (Node 24 uyumu için)
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -28,8 +30,9 @@ jobs:
       - name: Python Betigini Calistir
         run: python seo_saldiri.py
 
-      - name: Netlify'a Yükle
-        uses: nwtgck/actions-netlify@v3.0 # v2'den v3'e güncelledik
+      # 4. ADIM: Netlify aksiyonunu v3.0 sürümüne çekiyoruz
+      - name: Netlify'a Yukle
+        uses: nwtgck/actions-netlify@v3.0
         with:
           publish-dir: './' 
           production-deploy: true
